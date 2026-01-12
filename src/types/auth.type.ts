@@ -1,10 +1,10 @@
 import { Request } from "express";
 
 export interface JWTPayload {
-  sub: string; // userId (string, sesuai JWT spec)
+  sub: string;
   userId: string;
   username: string;
-  role: string;
+  roles: string[];
 }
 
 export interface TokenPair {

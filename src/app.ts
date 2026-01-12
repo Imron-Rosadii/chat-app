@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import authRoutes from "./routes/auth.route";
+import userRoutes from "./routes/user.route";
 import { errorHandler } from "./middleware/error.Handler";
 import { httpLogger } from "./middleware/logger";
 import { NotFoundError } from "./exceptions/httpError";
@@ -10,6 +11,7 @@ import { requestId } from "./middleware/requestId";
 const app = express();
 
 // Global Middlewares
+
 app.use(helmet());
 app.use(cors());
 app.use(requestId);
@@ -26,6 +28,7 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 // 🚨 404 ROUTE NOT FOUND (WAJIB DI SINI)
 app.use((req, res, next) => {
