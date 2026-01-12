@@ -6,6 +6,8 @@ import app from "./app";
 import config from "./config";
 import logger from "./utils/logger";
 import prisma from "./utils/prisma"; // import default dari prisma.ts
+import { initSocket } from "./socket/index";
+import "./utils/cloudinary";
 
 // ========================
 // Seed default 'user' role
@@ -34,6 +36,9 @@ async function seedDefaultRole() {
 // Start server
 // ========================
 const server = http.createServer(app);
+
+// init websocket
+initSocket(server);
 
 async function startServer() {
   try {

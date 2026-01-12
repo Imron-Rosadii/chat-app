@@ -1,51 +1,68 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  // Kita biarkan Prisma mengatur lokasi outputnya agar lebih sederhana
+  // output = "../generated/prisma" 
 }
 
 datasource db {
   provider = "postgresql"
-  
+
 }
 
+// --- ENUMS ---
 
+// Enum untuk Status AKUN (Administratif)
 enum UserStatus {
   ACTIVE
   INACTIVE
   BANNED
 }
 
-model User {
-  id           BigInt     @id @default(autoincrement())
-  username     String     @unique
-  email        String     @unique
-  passwordHash String
-  status       UserStatus @default(ACTIVE)
+// Enum untuk Status KEHADIRAN (Untuk fitur chat nanti)
+enum UserPresence {
+  ONLINE
+  AWAY
+  BUSY
+  OFFLINE
+}
 
+// --- MODELS ---
+
+model User {
+  id           BigInt        @id @default(autoincrement())
+  username     String        @unique
+  email        String        @unique
+  passwordHash String
+  avatarUrl    String?       
+  bio           String?      @db.Text
+  status       UserStatus    @default(ACTIVE) 
+  presence     UserPresence  @default(OFFLINE) 
+
+  // Relasi
   roles        UserRole[]
   refreshTokens RefreshToken[]
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  // Timestamps
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("users")
 }
 
 model Role {
-  id    BigInt @id @default(autoincrement())
-  name  String @unique
+  id          BigInt @id @default(autoincrement())
+  name        String @unique
+  description String?
 
   users UserRole[]
 
   @@map("roles")
 }
 
+// Tabel Penghubung User dan Role (Many-to-Many)
 model UserRole {
   id     BigInt @id @default(autoincrement())
   userId BigInt
@@ -58,6 +75,7 @@ model UserRole {
   @@map("user_roles")
 }
 
+// Tabel untuk menyimpan Refresh Token yang aman
 model RefreshToken {
   id        BigInt   @id @default(autoincrement())
   token     String   @unique

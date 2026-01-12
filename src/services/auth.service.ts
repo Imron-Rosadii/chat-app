@@ -86,7 +86,7 @@ export const login = async (
     sub: user.id.toString(),
     userId: user.id.toString(),
     username: user.username,
-    role: user.roles[0].role.name,
+    roles: user.roles.map((r) => r.role.name), // ✅ ARRAY
   };
 
   const tokens = TokenService.generateTokenPair(payload);
@@ -128,7 +128,7 @@ export const refresh = async (refreshToken: string): Promise<TokenPair> => {
     sub: user.id.toString(),
     userId: user.id.toString(),
     username: user.username,
-    role: user.roles[0].role.name,
+    roles: user.roles.map((r) => r.role.name), // ✅ ARRAY
   };
 
   const newTokens = TokenService.generateTokenPair(payload);
@@ -149,7 +149,8 @@ export const refresh = async (refreshToken: string): Promise<TokenPair> => {
 /**
  * Logout user
  */
-export const logout = async (userId: string): Promise<void> => {
+// auth.service.ts
+export const logout = async (userId: string) => {
   await prisma.refreshToken.deleteMany({
     where: { userId: BigInt(userId) },
   });

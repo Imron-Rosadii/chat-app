@@ -25,7 +25,7 @@ const config: Config = {
     refreshSecret: process.env.JWT_REFRESH_SECRET!,
 
     // ✅ HARDCODE + TYPE SAFE
-    accessExpiresIn: "15m",
+    accessExpiresIn: "1d",
     refreshExpiresIn: "7d",
   },
 };
